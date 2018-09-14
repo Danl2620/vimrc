@@ -2,37 +2,37 @@
 set nocompatible
 filetype off
 
-function! BuildCommandT(info)
-	" info is a dictionary with 3 fields
-	" - name:   name of the plugin
-	" - status: 'installed', 'updated', or 'unchanged'
-	" - force:  set on PlugInstall! or PlugUpdate!
-	if a:info.status == 'installed' || a:info.status == 'updated' || a:info.force
-		!c:\Ruby22-x64\DevKit\devkitvars.bat && cd ruby\command-t && ruby extconf.rb && make
-	endif
-endfunction
-
-" This doesn't actually seem to work
-function! BuildYCM(info)
-	" info is a dictionary with 3 fields
-	" - name:   name of the plugin
-	" - status: 'installed', 'updated', or 'unchanged'
-	" - force:  set on PlugInstall! or PlugUpdate!
-	if a:info.status == 'installed' || a:info.status == 'updated' || a:info.force
-
-		!mkdir "c:\temp\ycm_build" & cd "c:\temp\ycm_build" &&
-					\ cmake -G "Visual Studio 12 Win64" -DPATH_TO_LLVM_ROOT="c:\Users\mdyckhoff\Projects\llvm-3.9.1" -DUSE_PYTHON2=1
-					\ -DPYTHON_INCLUDE_DIR="C:\Python27\include"
-					\ -DPYTHON_LIBRARY="C:\Python27\libs\python27.lib" .
-					\ "c:\Program Files\Vim\vimfiles\plugged\youcompleteme\third_party\ycmd\cpp" &&
-					\ cmake --build . --target ycm_core --config Release
-
-	endif
-endfunction
+" function! BuildCommandT(info)
+" 	" info is a dictionary with 3 fields
+" 	" - name:   name of the plugin
+" 	" - status: 'installed', 'updated', or 'unchanged'
+" 	" - force:  set on PlugInstall! or PlugUpdate!
+" 	if a:info.status == 'installed' || a:info.status == 'updated' || a:info.force
+" 		!c:\Ruby22-x64\DevKit\devkitvars.bat && cd ruby\command-t && ruby extconf.rb && make
+" 	endif
+" endfunction
+" 
+" " This doesn't actually seem to work
+" function! BuildYCM(info)
+" 	" info is a dictionary with 3 fields
+" 	" - name:   name of the plugin
+" 	" - status: 'installed', 'updated', or 'unchanged'
+" 	" - force:  set on PlugInstall! or PlugUpdate!
+" 	if a:info.status == 'installed' || a:info.status == 'updated' || a:info.force
+" 
+" 		!mkdir "c:\temp\ycm_build" & cd "c:\temp\ycm_build" &&
+" 					\ cmake -G "Visual Studio 12 Win64" -DPATH_TO_LLVM_ROOT="c:\Users\mdyckhoff\Projects\llvm-3.9.1" -DUSE_PYTHON2=1
+" 					\ -DPYTHON_INCLUDE_DIR="C:\Python27\include"
+" 					\ -DPYTHON_LIBRARY="C:\Python27\libs\python27.lib" .
+" 					\ "c:\Program Files\Vim\vimfiles\plugged\youcompleteme\third_party\ycmd\cpp" &&
+" 					\ cmake --build . --target ycm_core --config Release
+" 
+" 	endif
+" endfunction
 
 " manually install https://github.com/junegunn/vim-plug
 " then restart vim and call PlugInstall to grab all these plugins
-call plug#begin('$VIM/vimfiles/plugged')
+call plug#begin('~/.vim/plugged')
 
 " Make sure you use single quotes
 Plug 'nfvs/vim-perforce'		" automatic Perforce checkout
@@ -41,14 +41,16 @@ Plug 'tpope/vim-surround'		" for controlling braces
 Plug 'tpope/vim-repeat'			" allow repeating of plugin maps
 Plug 'itchyny/lightline.vim'	" nice statusline plugin
 Plug 'Raimondi/delimitMate'		" auto closing of parens, etc
-Plug 'wincent/command-t', { 'do': function('BuildCommandT') }
-Plug 'valloric/youcompleteme' ", { 'do' : function('BuildYCM') } , 'commit' : 'cb57569' }
+" Plug 'wincent/command-t', { 'do': function('BuildCommandT') }
+" Plug 'valloric/youcompleteme' ", { 'do' : function('BuildYCM') } , 'commit' : 'cb57569' }
 Plug 'tenfyzhong/vim-gencode-cpp'	" auto generate function brass
 Plug 'wlangstroth/vim-racket'	" racket syntax etc, for dc/dcx files
 Plug 'vim-scripts/a.vim'		" open alternate file (h/cpp)
 Plug 'tikhomirov/vim-glsl'		" shader shading
 Plug 'AndrewRadev/linediff.vim'	" diff chunks of code
 " Plug 'vim-scripts/visual_studio.vim' " plz work
+Plug 'wlangstroth/vim-racket' " Racket mode
+Plug 'kien/rainbow_parentheses' " rainbow parenthesis
 
 call plug#end()
 
@@ -115,33 +117,36 @@ if $SHELL == "/bin/tcsh"
 	:set shellslash
 endif
 
+" for Fracas
+autocmd BufNewFile,BufRead *.frc set syntax=racket
+
 " my personal settings
 :let g:maxd_COpenHeight=15
 
-:let g:maxd_NDGame = $GAMENAME
-:let g:maxd_NDBranch = $GAMEBRANCH
-:let g:maxd_NDPath = 'c:\perforce\' . g:maxd_NDBranch
+" :let g:maxd_NDGame = $GAMENAME
+" :let g:maxd_NDBranch = $GAMEBRANCH
+" :let g:maxd_NDPath = 'c:\perforce\' . g:maxd_NDBranch
 
 " set up the path properly
 :let &path = ""
 
-:let &path .= ',' . g:maxd_NDPath . '\shared\src\'
-:let &path .= ',' . g:maxd_NDPath . '\shared\src\**'
-:let &path .= ',' . g:maxd_NDPath . '\' . g:maxd_NDGame . '\src\'
-:let &path .= ',' . g:maxd_NDPath . '\' . g:maxd_NDGame . '\src\**'
-:let &path .= ',c:\build\mdyckhoff\code\' . g:maxd_NDBranch . '\' . g:maxd_NDGame . '\ps4\default\dch\'
-:let &path .= ',c:\build\mdyckhoff\code\' . g:maxd_NDBranch . '\' . g:maxd_NDGame . '\ps4\default\dch\**'
-:let &path .= ',c:\build\mdyckhoff\code\' . g:maxd_NDBranch . '\unittest-gamelib\ps4\default\dch\'				" because fuck you
-:let &path .= ',c:\build\mdyckhoff\code\' . g:maxd_NDBranch . '\unittest-gamelib\ps4\default\dch\**'			" because fuck me
+" :let &path .= ',' . g:maxd_NDPath . '\shared\src\'
+" :let &path .= ',' . g:maxd_NDPath . '\shared\src\**'
+" :let &path .= ',' . g:maxd_NDPath . '\' . g:maxd_NDGame . '\src\'
+" :let &path .= ',' . g:maxd_NDPath . '\' . g:maxd_NDGame . '\src\**'
+" :let &path .= ',c:\build\mdyckhoff\code\' . g:maxd_NDBranch . '\' . g:maxd_NDGame . '\ps4\default\dch\'
+" :let &path .= ',c:\build\mdyckhoff\code\' . g:maxd_NDBranch . '\' . g:maxd_NDGame . '\ps4\default\dch\**'
+" :let &path .= ',c:\build\mdyckhoff\code\' . g:maxd_NDBranch . '\unittest-gamelib\ps4\default\dch\'				" because fuck you
+" :let &path .= ',c:\build\mdyckhoff\code\' . g:maxd_NDBranch . '\unittest-gamelib\ps4\default\dch\**'			" because fuck me
 
-exec ":cd " . g:maxd_NDPath
+" exec ":cd " . g:maxd_NDPath
 
 " command-t
 :let g:CommandTWildIgnore="\*.swp,\*.ppt,\*.txt,\*.html"
 
 " :let g:CommandTFileScanner = 'watchman'
-exec ":map <Leader>t :CommandT " . g:maxd_NDPath . "<CR>"
-:map <Leader>l :CommandTLine<CR>
+" exec ":map <Leader>t :CommandT " . g:maxd_NDPath . "<CR>"
+" :map <Leader>l :CommandTLine<CR>
 
 " perforce
 :let g:perforce_open_on_change = 1
@@ -206,7 +211,7 @@ call tcomment#type#Define('c_pre_block', g:tcommentPreC)
 :let g:ctags_args='--c-types=cfgsu --vim-types=f --if0=yes --language-force=c -ICOMPILE_TIME_ASSERT+ -IDECLARE_ALIGNED_TYPE+ -IRESTRICTED_DATA_ARRAY+ -IRESTRICTED_PTR+'
 :let g:ctags_statusline=1
 :let generate_tags=1
-:let &tags = g:maxd_NDPath . '\ctags.out'
+" :let &tags = g:maxd_NDPath . '\ctags.out'
 
 " global highlighting changes
 :hi	Pmenu				guibg=DarkRed
@@ -410,44 +415,44 @@ endfunction
 " \sa   cs find s
 " \sc   cs find c
 
-:let g:maxd_Search = '<Leader>s'
-exec "nmap " . g:maxd_Search . "<CR> <nop>"
+" :let g:maxd_Search = '<Leader>s'
+" exec "nmap " . g:maxd_Search . "<CR> <nop>"
 
 " set up custom YCM mappings
-function! MapYCM()
-
-	" set search highlight to current word, do a cscope search for the current
-	" word, open the quickfix window, and jump to the first result (:cr)
-	exec "nmap " . g:maxd_Search . "q :YcmCompleter GoToImprecise<CR>"
-	exec "nmap " . g:maxd_Search . "s :YcmCompleter GoTo<CR>"
-	exec "nmap " . g:maxd_Search . "i :YcmCompleter GoToInclude<CR>"
-	exec "nmap " . g:maxd_Search . "d :let @/=expand(\"<cword>\")<CR>:YcmCompleter GoToDeclaration<CR>"
-	exec "nmap " . g:maxd_Search . "f :let @/=expand(\"<cword>\")<CR>:YcmCompleter GoToDefinition<CR>"
-
-endfunction
+" function! MapYCM()
+" 
+" 	" set search highlight to current word, do a cscope search for the current
+" 	" word, open the quickfix window, and jump to the first result (:cr)
+" 	exec "nmap " . g:maxd_Search . "q :YcmCompleter GoToImprecise<CR>"
+" 	exec "nmap " . g:maxd_Search . "s :YcmCompleter GoTo<CR>"
+" 	exec "nmap " . g:maxd_Search . "i :YcmCompleter GoToInclude<CR>"
+" 	exec "nmap " . g:maxd_Search . "d :let @/=expand(\"<cword>\")<CR>:YcmCompleter GoToDeclaration<CR>"
+" 	exec "nmap " . g:maxd_Search . "f :let @/=expand(\"<cword>\")<CR>:YcmCompleter GoToDefinition<CR>"
+" 
+" endfunction
 
 " set up custom CScope mappings
-function! MapCScope()
-
-	" remove the default mappings
-	for character in split("cdefgist", '\zs')
-
-		exec "silent! nunmap <C-\\>" . character
-		exec "silent! nunmap <C-Space>" . character
-		exec "silent! nunmap <C-Space><C-Space>" . character
-
-	endfor
-
-	let search_term = "<C-R>=expand(\"<cword>\")<CR>"
-
-	" set search highlight to current word, do a cscope search for the current
-	" word, open the quickfix window, and jump to the first result (:cr)
-	exec "nmap " . g:maxd_Search . "a :let @/=expand(\"<cword>\")<CR>:cs find s " . search_term . "<CR>:copen " . g:maxd_COpenHeight . "<CR>:cr<CR>"
-	exec "nmap " . g:maxd_Search . "c :let @/=expand(\"<cword>\")<CR>:cs find c " . search_term . "<CR>:copen " . g:maxd_COpenHeight . "<CR>:cr<CR>"
-
-endfunction
-
-call MapYCM()
+" function! MapCScope()
+" 
+" 	" remove the default mappings
+" 	for character in split("cdefgist", '\zs')
+" 
+" 		exec "silent! nunmap <C-\\>" . character
+" 		exec "silent! nunmap <C-Space>" . character
+" 		exec "silent! nunmap <C-Space><C-Space>" . character
+" 
+" 	endfor
+" 
+" 	let search_term = "<C-R>=expand(\"<cword>\")<CR>"
+" 
+" 	" set search highlight to current word, do a cscope search for the current
+" 	" word, open the quickfix window, and jump to the first result (:cr)
+" 	exec "nmap " . g:maxd_Search . "a :let @/=expand(\"<cword>\")<CR>:cs find s " . search_term . "<CR>:copen " . g:maxd_COpenHeight . "<CR>:cr<CR>"
+" 	exec "nmap " . g:maxd_Search . "c :let @/=expand(\"<cword>\")<CR>:cs find c " . search_term . "<CR>:copen " . g:maxd_COpenHeight . "<CR>:cr<CR>"
+" 
+" endfunction
+" 
+" call MapYCM()
 
 " cscope settings
 if has("cscope")
@@ -464,9 +469,9 @@ if has("cscope")
     "   'd'   called: find functions that function under cursor calls
 
 	cs reset
-	exec 'cs add ' . g:maxd_NDPath . '\cscope.out ' . g:maxd_NDPath
+	" exec 'cs add ' . g:maxd_NDPath . '\cscope.out ' . g:maxd_NDPath
 
-	call MapCScope()
+	" call MapCScope()
 
     set cscopeverbose
 	set cscopequickfix=c-,d-,e-,f-,g-,i-,s-,t-
