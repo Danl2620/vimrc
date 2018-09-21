@@ -2,34 +2,6 @@
 set nocompatible
 filetype off
 
-" function! BuildCommandT(info)
-" 	" info is a dictionary with 3 fields
-" 	" - name:   name of the plugin
-" 	" - status: 'installed', 'updated', or 'unchanged'
-" 	" - force:  set on PlugInstall! or PlugUpdate!
-" 	if a:info.status == 'installed' || a:info.status == 'updated' || a:info.force
-" 		!c:\Ruby22-x64\DevKit\devkitvars.bat && cd ruby\command-t && ruby extconf.rb && make
-" 	endif
-" endfunction
-" 
-" " This doesn't actually seem to work
-" function! BuildYCM(info)
-" 	" info is a dictionary with 3 fields
-" 	" - name:   name of the plugin
-" 	" - status: 'installed', 'updated', or 'unchanged'
-" 	" - force:  set on PlugInstall! or PlugUpdate!
-" 	if a:info.status == 'installed' || a:info.status == 'updated' || a:info.force
-" 
-" 		!mkdir "c:\temp\ycm_build" & cd "c:\temp\ycm_build" &&
-" 					\ cmake -G "Visual Studio 12 Win64" -DPATH_TO_LLVM_ROOT="c:\Users\mdyckhoff\Projects\llvm-3.9.1" -DUSE_PYTHON2=1
-" 					\ -DPYTHON_INCLUDE_DIR="C:\Python27\include"
-" 					\ -DPYTHON_LIBRARY="C:\Python27\libs\python27.lib" .
-" 					\ "c:\Program Files\Vim\vimfiles\plugged\youcompleteme\third_party\ycmd\cpp" &&
-" 					\ cmake --build . --target ycm_core --config Release
-" 
-" 	endif
-" endfunction
-
 " manually install https://github.com/junegunn/vim-plug
 " then restart vim and call PlugInstall to grab all these plugins
 call plug#begin('~/.vim/plugged')
@@ -50,7 +22,8 @@ Plug 'tikhomirov/vim-glsl'		" shader shading
 Plug 'AndrewRadev/linediff.vim'	" diff chunks of code
 " Plug 'vim-scripts/visual_studio.vim' " plz work
 Plug 'wlangstroth/vim-racket' " Racket mode
-Plug 'kien/rainbow_parentheses' " rainbow parenthesis
+Plug 'kien/rainbow_parentheses.vim' " rainbow parenthesis
+Plug 'kien/ctrlp.vim'			" CtrlP mode
 
 call plug#end()
 
