@@ -51,7 +51,8 @@ Plug 'AndrewRadev/linediff.vim'	" diff chunks of code
 " Plug 'vim-scripts/visual_studio.vim' " plz work
 Plug 'wlangstroth/vim-racket' " Racket mode
 Plug 'kien/rainbow_parentheses' " rainbow parenthesis
-
+Plug 'ctrlpvim/ctrlp.vim'		" CtrlP
+Plug 'kongo2002/fsharp-vim'		" F# Support
 call plug#end()
 
 
@@ -62,10 +63,15 @@ filetype plugin indent on
 :set shiftwidth=4
 :set softtabstop=4
 :set tabstop=4
+:set expandtab
 :set encoding=utf-8
 
 " makes backspace do what you think it does
 :set backspace=2
+
+" visual selection copied to clipboard
+:set go+=aa
+
 
 " fun shit
 :set showcmd
@@ -75,6 +81,7 @@ filetype plugin indent on
 :set ruler
 :set background=dark
 :set guifont=consolas:h10:b
+" :set foldmethod=indent
 
 :set undofile
 
@@ -104,6 +111,11 @@ filetype plugin indent on
 :set updatetime=10
 :set cindent
 :set cinoptions=(1s
+:set autoindent
+" :set lisp
+
+let g:ctrlp_working_path_mode = 'ra'
+let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
 
 :set dir^=c:\vimtmp\swp
 :set backupdir=c:\vimtmp\backup
